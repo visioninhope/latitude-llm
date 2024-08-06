@@ -6,9 +6,17 @@ import { DocumentVersionsRepository } from '$core/repositories'
 import { documentVersions } from '$core/schema'
 import { eq } from 'drizzle-orm'
 
+export const sanitizeDocumentPath = <T extends string | undefined>(
+  path: T,
+): T => {
+  if (path === undefined) return path
+  if (path.startsWith('/')) return path
+  return `/${path}` as T
+}
+
 export async function createNewDocument({
   commit,
-  path,
+  path: inputPath,
   content,
 }: {
   commit: Commit
@@ -22,6 +30,7 @@ export async function createNewDocument({
 
     const workspace = await findWorkspaceFromCommit(commit, tx)
     const docsScope = new DocumentVersionsRepository(workspace!.id, tx)
+    const path = sanitizeDocumentPath(inputPath)
 
     const currentDocs = await docsScope
       .getDocumentsAtCommit(commit)

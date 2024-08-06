@@ -13,16 +13,19 @@ import { streamToGenerator } from '$core/lib/streamToGenerator'
 import { ProviderApiKeysRepository } from '$core/repositories'
 
 import { ai, validateConfig } from '../ai'
+import { LogProviderGenerationProps } from '../providerLogs'
 import { createChainAtCommit } from './createChainAtCommit'
 
 export async function runDocumentAtCommit({
   documentUuid,
   commit,
   parameters,
+  logHandler,
 }: {
   documentUuid: string
   commit: Commit
   parameters: Record<string, unknown>
+  logHandler: (log: LogProviderGenerationProps) => void
 }) {
   const workspace = await findWorkspaceFromCommit(commit)
   if (!workspace) throw Result.error(new NotFoundError('Workspace not found'))
@@ -44,7 +47,7 @@ export async function runDocumentAtCommit({
   await new Promise<void>((resolve) => {
     stream = new ReadableStream<ChainEvent>({
       start(controller) {
-        response = iterate({ chain, scope, controller })
+        response = iterate({ chain, scope, controller, logHandler })
 
         resolve()
       },
@@ -64,6 +67,7 @@ async function iterate({
   controller,
   previousCount = 0,
   previousResponse,
+  logHandler,
 }: {
   chain: Chain
   scope: ProviderApiKeysRepository
@@ -74,6 +78,7 @@ async function iterate({
     text: string
     usage: Record<string, unknown>
   }
+  logHandler: (log: LogProviderGenerationProps) => void
 }) {
   try {
     const { conversation, completed, config, apiKey, sentCount } =
@@ -97,12 +102,14 @@ async function iterate({
       event: LATITUDE_EVENT,
     })
 
-    const result = await ai({
-      messages: conversation.messages,
-      apiKey: apiKey.token,
-      provider: apiKey.provider,
-      model: config.model,
-    })
+    const result = await ai(
+      {
+        messages: conversation.messages,
+        config: config,
+        provider: apiKey,
+      },
+      { logHandler },
+    )
 
     for await (const value of streamToGenerator(result.fullStream)) {
       controller.enqueue({
@@ -136,6 +143,14 @@ async function iterate({
 
       return response
     } else {
+      controller.enqueue({
+        event: LATITUDE_EVENT,
+        data: {
+          type: ChainEventTypes.StepComplete,
+          response,
+        },
+      })
+
       return iterate({
         chain,
         scope,
@@ -143,6 +158,7 @@ async function iterate({
         previousApiKey: apiKey,
         previousCount: sentCount,
         previousResponse: response,
+        logHandler: loghandler,
       })
     }
   } catch (error) {

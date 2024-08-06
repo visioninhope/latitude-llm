@@ -63,6 +63,9 @@ importers:
       '@latitude-data/env':
         specifier: workspace:^
         version: link:../../packages/env
+      '@latitude-data/jobs':
+        specifier: workspace:^
+        version: link:../../packages/jobs
       '@t3-oss/env-core':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.5.4)(zod@3.23.8)
@@ -133,6 +136,9 @@ importers:
       bullmq:
         specifier: ^5.8.5
         version: 5.8.7
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
       ioredis:
         specifier: ^5.4.1
         version: 5.4.1
@@ -315,6 +321,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      uuid:
+        specifier: ^10.0.0
+        version: 10.0.0
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -371,6 +380,9 @@ importers:
 
   packages/jobs:
     dependencies:
+      '@latitude-data/core':
+        specifier: workspace:*
+        version: link:../core
       '@latitude-data/env':
         specifier: workspace:*
         version: link:../env
@@ -5140,6 +5152,10 @@ packages:
       is-data-view: 1.0.1
     dev: true
 
+  /date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+    dev: false
+
   /debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -9646,6 +9662,11 @@ packages:
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  /uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
+    dev: false
 
   /uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
