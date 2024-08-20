@@ -3,6 +3,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleAlert,
+  CirclePlus,
   Copy,
   Ellipsis,
   EllipsisVertical,
@@ -29,11 +30,14 @@ import { cn } from '$ui/lib/utils'
 import { LatitudeLogo, LatitudeLogoMonochrome } from './custom-icons'
 
 export const Icons = {
+  addCircle: CirclePlus,
+  addSquare: SquarePlus,
   alert: CircleAlert,
   check: CheckCircle2,
   chevronDown: ChevronDown,
   chevronRight: ChevronRight,
   clipboard: Copy,
+  deletion: SquareMinus,
   ellipsis: Ellipsis,
   ellipsisVertical: EllipsisVertical,
   file: File,
@@ -47,12 +51,10 @@ export const Icons = {
   lock: Lock,
   logo: LatitudeLogo,
   logoMonochrome: LatitudeLogoMonochrome,
+  modification: SquareDot,
+  moon: Moon,
   trash: Trash,
   sun: Sun,
-  moon: Moon,
-  addition: SquarePlus,
-  deletion: SquareMinus,
-  modification: SquareDot,
 }
 
 export type IconName = keyof typeof Icons

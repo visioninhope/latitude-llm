@@ -22,7 +22,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
     <AppLayout
       navigationLinks={NAV_LINKS}
       currentUser={session.user}
-      breadcrumbs={[{ name: session.workspace.name }, { name: 'Settings' }]}
+      breadcrumbs={[{ name: session.workspace.name }, { name: 'Evaluations' }]}
       sectionLinks={sectionLinks}
     >
       {children}

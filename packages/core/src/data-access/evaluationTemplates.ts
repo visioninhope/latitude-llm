@@ -1,17 +1,35 @@
 import {
   database,
+  evaluationTemplateCategories,
   evaluationTemplates,
   NotFoundError,
   Result,
   TypedResult,
 } from '@latitude-data/core'
 import { EvaluationTemplate } from '$core/browser'
-import { eq } from 'drizzle-orm'
+import { asc, eq, getTableColumns } from 'drizzle-orm'
+
+export type EvaluationTemplateWithCategory = EvaluationTemplate & {
+  category: string
+}
 
 export async function findAllEvaluationTemplates(): Promise<
-  TypedResult<EvaluationTemplate[], Error>
+  TypedResult<EvaluationTemplateWithCategory[], Error>
 > {
-  const result = await database.query.evaluationTemplates.findMany()
+  const result = await database
+    .select({
+      ...getTableColumns(evaluationTemplates),
+      category: evaluationTemplateCategories.name,
+    })
+    .from(evaluationTemplates)
+    .innerJoin(
+      evaluationTemplateCategories,
+      eq(evaluationTemplates.categoryId, evaluationTemplateCategories.id),
+    )
+    .orderBy(
+      asc(evaluationTemplateCategories.name),
+      asc(evaluationTemplates.name),
+    )
   return Result.ok(result)
 }
 

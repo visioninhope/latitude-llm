@@ -45,9 +45,10 @@ export default async function CommitLayout({
     throw error
   }
 
-  const url = ROUTES.projects.detail({ id: project.id }).commits.latest
+  const projectUrl = ROUTES.projects.detail({ id: project.id }).commits.latest
   const sectionLinks = [
-    { label: 'Projects', href: url },
+    { label: 'Projects', href: projectUrl },
+    { label: 'Evaluations', href: ROUTES.evaluations.root },
     { label: 'Settings', href: ROUTES.settings.root },
   ]
 

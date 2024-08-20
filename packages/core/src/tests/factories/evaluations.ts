@@ -26,7 +26,7 @@ export async function createEvaluation({
   const prompt = factories.helpers.createPrompt({ provider })
 
   const evaluationResult = await createEvaluationService({
-    workspace,
+    workspaceId: workspace.id,
     prompt,
     name: name ?? faker.company.catchPhrase(),
     description: description ?? faker.lorem.sentence(),

@@ -4,6 +4,7 @@ import {
   CommitsRepository,
   DocumentLogsRepository,
   DocumentVersionsRepository,
+  findAllEvaluationTemplates,
   NotFoundError,
   ProjectsRepository,
 } from '@latitude-data/core'
@@ -125,3 +126,10 @@ export const getDocumentLogsWithMetadataCached = cache(
     return logs
   },
 )
+
+export const getEvaluationTemplatesCached = cache(async () => {
+  const result = await findAllEvaluationTemplates()
+  const templates = result.unwrap()
+
+  return templates
+})

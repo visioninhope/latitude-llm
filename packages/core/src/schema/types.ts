@@ -10,6 +10,7 @@ import { users } from '$core/schema/models/users'
 import { workspaces } from '$core/schema/models/workspaces'
 import { type InferSelectModel } from 'drizzle-orm'
 
+import { evaluationTemplateCategories } from '..'
 import { connectedEvaluations } from './models/connectedEvaluations'
 import { documentLogs } from './models/documentLogs'
 import { evaluationResults } from './models/evaluationResults'
@@ -42,3 +43,8 @@ export type Evaluation = InferSelectModel<typeof evaluations>
 export type ConnectedEvaluation = InferSelectModel<typeof connectedEvaluations>
 export type EvaluationResult = InferSelectModel<typeof evaluationResults>
 export type EvaluationTemplate = InferSelectModel<typeof evaluationTemplates>
+export type EvaluationTemplateCategory = InferSelectModel<
+  typeof evaluationTemplateCategories
+>
+
+export type { EvaluationTemplateWithCategory } from '../data-access/evaluationTemplates'

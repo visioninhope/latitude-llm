@@ -13,6 +13,9 @@ export const ROUTES = {
   settings: {
     root: '/settings',
   },
+  evaluations: {
+    root: '/evaluations',
+  },
   projects: {
     root: PROJECTS_PATH,
     detail: ({ id }: { id: number }) => {

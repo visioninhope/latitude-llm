@@ -1,5 +1,12 @@
 import { relations } from 'drizzle-orm'
-import { bigint, bigserial, index, text, varchar } from 'drizzle-orm/pg-core'
+import {
+  bigint,
+  bigserial,
+  index,
+  text,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core'
 
 import { latitudeSchema, workspaces } from '..'
 import { timestamps } from '../schemaHelpers'
@@ -9,6 +16,7 @@ export const evaluations = latitudeSchema.table(
   'evaluations',
   {
     id: bigserial('id', { mode: 'number' }).notNull().primaryKey(),
+    uuid: uuid('uuid').notNull().unique().defaultRandom(),
     name: varchar('name', { length: 256 }).notNull(),
     description: text('description').notNull(),
     prompt: text('prompt').notNull(),
