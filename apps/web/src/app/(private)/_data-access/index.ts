@@ -4,6 +4,7 @@ import {
   CommitsRepository,
   DocumentLogsRepository,
   DocumentVersionsRepository,
+  EvaluationsRepository,
   findAllEvaluationTemplates,
   NotFoundError,
   ProjectsRepository,
@@ -132,4 +133,13 @@ export const getEvaluationTemplatesCached = cache(async () => {
   const templates = result.unwrap()
 
   return templates
+})
+
+export const getEvaluationByUuidCached = cache(async (uuid: string) => {
+  const { workspace } = await getCurrentUser()
+  const evaluationScope = new EvaluationsRepository(workspace.id)
+  const result = await evaluationScope.findByUuid(uuid)
+  const evaluation = result.unwrap()
+
+  return evaluation
 })

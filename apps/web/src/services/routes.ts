@@ -8,6 +8,11 @@ export enum DocumentRoutes {
   logs = 'logs',
 }
 
+export enum EvaluationRoutes {
+  history = 'history',
+  editor = 'editor',
+}
+
 export const ROUTES = {
   root: ROOT_PATH,
   settings: {
@@ -15,6 +20,16 @@ export const ROUTES = {
   },
   evaluations: {
     root: '/evaluations',
+    detail: ({ uuid }: { uuid: string }) => {
+      const root = `${ROUTES.evaluations.root}/${uuid}`
+      return {
+        root,
+        [EvaluationRoutes.history]: { root },
+        [EvaluationRoutes.editor]: {
+          root: `${root}/editor`,
+        },
+      }
+    },
   },
   projects: {
     root: PROJECTS_PATH,
@@ -36,10 +51,8 @@ export const ROUTES = {
                 detail: ({ uuid }: { uuid: string }) => {
                   const root = `${rootDocuments}/${uuid}`
                   return {
-                    root: `${root}`,
-                    [DocumentRoutes.editor]: {
-                      root: `${root}`,
-                    },
+                    root,
+                    [DocumentRoutes.editor]: { root },
                     [DocumentRoutes.logs]: {
                       root: `${root}/${DocumentRoutes.logs}`,
                     },

@@ -4,6 +4,7 @@ import type { Evaluation } from '@latitude-data/core/browser'
 import { useSession, useToast } from '@latitude-data/web-ui'
 import { createEvaluationAction } from '$/actions/evaluations/create'
 import { fetchEvaluationsAction } from '$/actions/evaluations/fetch'
+import { updateEvaluationContentAction } from '$/actions/evaluations/updateContent'
 import useLatitudeAction from '$/hooks/useLatitudeAction'
 import useSWR, { SWRConfiguration } from 'swr'
 
@@ -18,11 +19,11 @@ export default function useEvaluations(
   const { toast } = useToast()
 
   const {
-    data = undefined,
+    data = [],
     mutate,
     isLoading,
     error: swrError,
-  } = useSWR<Evaluation[] | undefined>(
+  } = useSWR<Evaluation[]>(
     ['evaluations', workspace.id],
     async () => {
       const [data, error] = await fetchEvaluationsAction()
@@ -33,7 +34,7 @@ export default function useEvaluations(
           description: error.formErrors?.[0] || error.message,
           variant: 'destructive',
         })
-        return undefined
+        throw error
       }
 
       return data
@@ -54,11 +55,25 @@ export default function useEvaluations(
       },
     })
 
+  const { execute: updateEvaluation, isPending: isUpdating } =
+    useLatitudeAction(updateEvaluationContentAction, {
+      onSuccess: ({ data: newEval }) => {
+        const prevEvaluations = data
+        mutate(
+          prevEvaluations.map((prevEval: Evaluation) =>
+            prevEval.uuid === newEval.uuid ? newEval : prevEval,
+          ),
+        )
+      },
+    })
+
   return {
     data,
     isLoading,
     createEvaluation,
     isCreating,
+    updateEvaluation,
+    isUpdating,
     error: swrError,
   }
 }

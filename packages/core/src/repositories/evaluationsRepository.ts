@@ -39,6 +39,19 @@ export class EvaluationsRepository extends Repository {
     return Result.ok(result[0]!)
   }
 
+  async findByUuid(uuid: string) {
+    const result = await this.db
+      .select()
+      .from(this.scope)
+      .where(eq(this.scope.uuid, uuid))
+
+    if (!result.length) {
+      return Result.error(new NotFoundError('Evaluation not found'))
+    }
+
+    return Result.ok(result[0]!)
+  }
+
   async findAll() {
     const result = await this.db.select().from(this.scope)
     return Result.ok(result)

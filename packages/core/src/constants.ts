@@ -18,6 +18,8 @@ export enum CommitStatus {
   Draft = 'draft',
 }
 
+export { PARAMETERS_FROM_LOG } from './services/evaluations/compiler/constants'
+
 export type Message = CompilerMessage
 
 export enum ModifiedDocumentType {
